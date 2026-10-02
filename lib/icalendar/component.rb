@@ -19,6 +19,12 @@ module Icalendar
       _parse Parser.clean_bad_wrapping(source)
     end
 
+    def self.parse_jcal(source)
+      parser = JcalParser.new(source)
+      parser.component_class = self
+      parser.parse
+    end
+
     def initialize(name, ical_name = nil)
       @name = name
       @ical_name = ical_name || "V#{name.upcase}"
@@ -36,6 +42,17 @@ module Icalendar
         ical_components,
         "END:#{ical_name}\r\n"
       ].compact.join "\r\n"
+    end
+
+    # Returns the jCal (RFC 7265) representation of this component as a
+    # nested array of [name, properties, components]. Call #to_json on the
+    # result to serialize it to a JSON string.
+    def to_jcal
+      [
+        ical_name.downcase,
+        jcal_properties,
+        jcal_components
+      ]
     end
 
     private
@@ -107,6 +124,23 @@ module Icalendar
         end
       end
       collection.empty? ? nil : collection.join.chomp("\r\n")
+    end
+
+    def jcal_properties
+      (self.class.properties + custom_properties.keys).flat_map do |prop|
+        value = property prop
+        next [] if value.nil?
+        parts = value.is_a?(::Array) ? value : [value]
+        parts.map do |part|
+          Jcal.property_to_jcal ical_prop_name(prop).downcase, part
+        end
+      end
+    end
+
+    def jcal_components
+      (self.class.components + custom_components.keys).flat_map do |component_name|
+        send(component_name).map { |component| component.to_jcal }
+      end
     end
 
     class << self

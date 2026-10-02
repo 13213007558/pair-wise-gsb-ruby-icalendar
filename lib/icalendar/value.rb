@@ -96,6 +96,7 @@ require_relative 'values/period'
 require_relative 'values/recur'
 require_relative 'values/text'
 require_relative 'values/time'
+require_relative 'values/unknown'
 require_relative 'values/uri'
 require_relative 'values/utc_offset'
 

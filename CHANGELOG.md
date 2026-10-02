@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Add jCal (RFC 7265) read/write support: `Icalendar::Calendar.parse_jcal` / `Icalendar::JcalParser` parse jCal JSON into the same object graph as ICS, and `Component#to_jcal` serializes back. Property parameters, value types, multi-value and structured values, and nested/custom components are preserved; X- properties with unknown value types round trip as raw "unknown" values. Parse errors report the position in the JSON document.
+
 ## 2.12.5 - 2026-09-25
 - Generate timezone transition onsets and recurrence dates using the previous UTC offset. - Ben Abulafia
 - Limit parsing depth

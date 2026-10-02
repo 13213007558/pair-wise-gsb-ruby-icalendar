@@ -296,6 +296,36 @@ puts "start date-time timezone: #{event.dtstart.ical_params['tzid']}"
 puts "summary: #{event.summary}"
 ```
 
+jCal (RFC 7265) support
+---
+
+The same object graph can be read from and written to jCal, the JSON
+representation of iCalendar, e.g. when a frontend posts jCal JSON to your
+backend:
+
+```ruby
+# Parse a jCal JSON document (or a stream of jCal components)
+cals = Icalendar::Calendar.parse_jcal(jcal_json_string)
+cal = cals.first
+
+# Everything works exactly like with ICS input
+event = cal.events.first
+puts "start date-time: #{event.dtstart}"
+
+# Serialize back to jCal (a nested array) or JSON text
+cal.to_jcal        # => ["vcalendar", [...], [...]]
+cal.to_jcal.to_json
+
+# ...or to iCalendar
+cal.to_ical
+```
+
+Property parameters, value types, multi-value and structured values (like
+GEO or RRULE), and nested/custom components are preserved. X- properties
+with an unknown value type are kept as raw "unknown" values instead of
+being guessed as text, so they round trip unchanged. Parse errors point at
+the offending position in the JSON document.
+
 Finders
 ---
 
