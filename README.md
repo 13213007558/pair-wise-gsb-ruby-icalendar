@@ -296,6 +296,34 @@ puts "start date-time timezone: #{event.dtstart.ical_params['tzid']}"
 puts "summary: #{event.summary}"
 ```
 
+Parsing and generating jCal (RFC 7265)
+---
+
+If your frontend speaks jCal JSON instead of ICS, the same object graph is
+available through the jCal parser and serializer:
+
+```ruby
+# Parse a jCal JSON document into calendars
+cals = Icalendar::Calendar.parse_jcal(jcal_json_string)
+cal = cals.first
+
+# Or use the parser directly
+cal = Icalendar::JcalParser.new(jcal_json_string).parse.first
+
+# Events, values and parameters behave exactly as if parsed from ICS
+event = cal.events.first
+puts "start date-time: #{event.dtstart}"
+
+# Serialize back to jCal
+cal.to_jcal       # => ["vcalendar", [...], [...]] plain Ruby structure
+cal.to_jcal_json  # => the same structure as a JSON string
+```
+
+Property parameters, value types, multi-value and structured values, nested
+and custom components are preserved in both directions, including unknown
+X- properties with non-text value types. Invalid input raises
+Icalendar::JcalParser::ParseError with the position in the JSON document.
+
 Finders
 ---
 

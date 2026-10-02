@@ -38,6 +38,14 @@ module Icalendar
       ].compact.join "\r\n"
     end
 
+    def to_jcal
+      Icalendar::Jcal.dump self
+    end
+
+    def to_jcal_json
+      to_jcal.to_json
+    end
+
     private
 
     def ical_properties
@@ -110,6 +118,10 @@ module Icalendar
     end
 
     class << self
+      def parse_jcal(source)
+        JcalParser.new(source).parse
+      end
+
       private def _parse(source)
         parser = Parser.new(source)
         parser.component_class = self

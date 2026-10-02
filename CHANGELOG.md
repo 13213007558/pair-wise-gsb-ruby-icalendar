@@ -1,5 +1,11 @@
 ## Unreleased
 
+- Add RFC 7265 jCal support: parse jCal JSON into the regular component graph
+  with Icalendar::JcalParser / Component.parse_jcal, and serialize back with
+  Component#to_jcal / Component#to_jcal_json. Property parameters, value
+  types, multi-value and structured values, nested and custom components are
+  preserved, and parse errors point at the position in the JSON document.
+
 ## 2.12.5 - 2026-09-25
 - Generate timezone transition onsets and recurrence dates using the previous UTC offset. - Ben Abulafia
 - Limit parsing depth

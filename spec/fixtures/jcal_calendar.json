@@ -1,0 +1,45 @@
+["vcalendar",
+  [
+    ["version", {}, "text", "2.0"],
+    ["prodid", {}, "text", "-//Example Corp//jCal Sample//EN"],
+    ["calscale", {}, "text", "GREGORIAN"]
+  ],
+  [
+    ["vevent",
+      [
+        ["uid", {}, "text", "jcal-sample-1@example.com"],
+        ["dtstamp", {}, "date-time", "2026-10-01T12:00:00Z"],
+        ["dtstart", {}, "date-time", "2026-10-05T09:00:00Z"],
+        ["dtend", {}, "date-time", "2026-10-05T10:00:00Z"],
+        ["summary", {}, "text", "jCal sample event"],
+        ["geo", {}, "float", [37.386013, -122.082932]],
+        ["rdate", {"tzid": "US-Mountain"}, "period",
+          "2026-10-06T09:00:00/2026-10-06T10:00:00",
+          "2026-10-07T09:00:00/PT1H"],
+        ["attendee", {"cn": "John Doe", "role": "REQ-PARTICIPANT",
+                      "partstat": "ACCEPTED",
+                      "delegated-to": ["mailto:a@example.com", "mailto:b@example.com"]},
+          "cal-address", "mailto:john@example.com"],
+        ["categories", {}, "text", "MEETING", "BUSINESS"],
+        ["x-num-guests", {}, "integer", 5],
+        ["x-weird", {}, "x-custom-type", "opaque-value"]
+      ],
+      [
+        ["valarm",
+          [
+            ["action", {}, "text", "DISPLAY"],
+            ["trigger", {}, "duration", "-PT15M"],
+            ["description", {}, "text", "Reminder"]
+          ],
+          []
+        ]
+      ]
+    ],
+    ["x-my-component",
+      [
+        ["x-inner-prop", {}, "text", "nested"]
+      ],
+      []
+    ]
+  ]
+]
