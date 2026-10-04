@@ -296,6 +296,41 @@ puts "start date-time timezone: #{event.dtstart.ical_params['tzid']}"
 puts "summary: #{event.summary}"
 ```
 
+JSCalendar (RFC 8984) conversion
+---
+
+A single event, including its participants, schedule (floating, zoned and
+all-day), alerts, recurrence rules and recurrence exceptions, can be
+converted to and from a JSCalendar Event represented as a plain
+JSON-serializable Hash:
+
+```ruby
+report = Icalendar::JSCalendar::Report.new
+
+js = Icalendar::JSCalendar.event_to_jscalendar(event, report: report)
+js['uid']        # the event UID is kept as the stable identifier
+js['start']      # => "2026-10-04T09:00:00"
+js['timeZone']   # => "America/New_York" (absent for floating time)
+
+event = Icalendar::JSCalendar.event_from_jscalendar(js, report: report)
+```
+
+Properties that have no counterpart in the target format are never dropped
+silently. They are either preserved as extension data
+(`icalendar:properties` / `icalendar:*` keys in JSCalendar, an
+`X-JSCALENDAR-UNMAPPED` property in iCalendar) or reported as lost, item by
+item:
+
+```ruby
+report.each { |entry| puts entry }
+# export: PRIORITY preserved (stored in icalendar:properties)
+# import: recurrenceRules rscale lost (no iCalendar RRULE counterpart)
+```
+
+Converting an iCalendar `UNTIL` between UTC and the event timezone uses
+TZInfo when it is available; otherwise the wall time is kept and a report
+entry is added.
+
 Finders
 ---
 
